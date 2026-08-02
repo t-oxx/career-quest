@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#081827" />
+    <meta name="description" content="行きたい未来と、今の自分から始めやすいキャリアルートを確認するミニゲームです。" />
+    <meta name="author" content="@satomi.ohtagaki" />
+    <meta name="copyright" content="© 2026 @satomi.ohtagaki" />
+    <title>Career Quest | はじめのルートを探そう</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="game-bar">
+        <span class="game-brand">CAREER QUEST</span>
+        <span id="stepLabel" class="step-label" aria-live="polite">START</span>
+        <nav id="gameNav" class="game-nav" aria-label="ページ操作" hidden>
+          <button type="button" data-global-action="back" aria-label="一つ前に戻る">← 戻る</button>
+          <button type="button" data-global-action="top" aria-label="トップへ戻る">TOP</button>
+        </nav>
+      </header>
+
+      <section id="screen" class="screen" aria-live="polite"></section>
+      <button id="persistentGuide" class="persistent-guide" type="button" aria-label="うさぎの案内人に話しかける">
+        <img src="assets/rabbit-guide.webp" alt="" />
+      </button>
+    </main>
+
+    <template id="startTemplate">
+      <article class="start-screen">
+        <img class="start-art" src="assets/hero.webp" alt="複数の未来の扉を前にした冒険者" />
+        <div class="start-action">
+          <p>
+            世の中には、まだ知らない仕事がたくさんある。<br />
+            今すぐ開ける扉もあれば、<br />
+            <strong>経験やスキルという装備</strong>を集めて開く扉もある。<br />
+            今の自分から、未来へ続くルートを探そう。
+          </p>
+          <button class="quest-button" data-action="start-quest">キャリアクエストを始める <span>→</span></button>
+        </div>
+
+
+      </article>
+    </template>
+
+    <template id="goalTemplate">
+      <article class="goal-screen">
+        <section id="careerReveal" class="career-reveal" hidden aria-label="仕事のカードを動かして、未来の扉へ送る演出">
+          <div class="reveal-veil" aria-hidden="true"></div>
+          <div class="reveal-copy">
+            <p class="eyebrow">THE WORLD OF WORK</p>
+            <h2>仕事も、働き方も、ひとつじゃない。</h2>
+            <p>カードをマウスや指で動かして、仕事の世界を眺めてみよう。</p>
+          </div>
+          <div id="revealCards" class="reveal-cards" aria-hidden="true"></div>
+
+          <aside id="cardDetail" class="card-detail" hidden aria-live="polite">
+            <button class="card-detail__close" type="button" data-action="close-card-detail" aria-label="カード詳細を閉じる">×</button>
+            <button class="card-detail__nav card-detail__nav--prev" type="button" data-action="prev-card" aria-label="前のカードを見る">‹</button>
+            <div class="card-detail__content">
+              <div id="cardDetailVisual" class="card-detail__visual"></div>
+              <h3 id="cardDetailTitle"></h3>
+              <dl class="card-detail__stats">
+                <div><dt>役割</dt><dd id="cardDetailCopy"></dd></div>
+                <div><dt>装備</dt><dd id="cardDetailGear"></dd></div>
+                <div class="card-detail__warning"><dt>注意</dt><dd id="cardDetailChallenge"></dd></div>
+              </dl>
+              <button class="card-detail__choose" type="button" data-action="choose-card-gate">この扉を見てみる <span>→</span></button>
+            </div>
+            <button class="card-detail__nav card-detail__nav--next" type="button" data-action="next-card" aria-label="次のカードを見る">›</button>
+          </aside>
+
+          <div class="reveal-controls">
+            <p><span>↔</span> ドラッグしてカードを動かせるよ</p>
+            <button class="reveal-skip" type="button" data-action="skip-reveal">演出をスキップして、カードを扉へ送る <span>→</span></button>
+          </div>
+        </section>
+
+        <div class="goal-heading">
+          <p class="eyebrow">QUEST 01 / CHOOSE YOUR GATE</p>
+          <h1>行きたい未来の<br />扉を選ぼう。</h1>
+          <p class="supporting-copy">扉をタップすると、開くために必要な装備をうさぎが教えてくれるよ。</p>
+          <p class="rank-note"><strong>扉のランク</strong>は、今ある装備で挑みやすい扉の目安。経験値を集めれば、次の扉が開く。</p>
+        </div>
+
+        <div class="door-map">
+          <img src="assets/route-doors.webp" alt="四つの未来へつながる魔法の扉" />
+          <button class="door-hotspot creative" data-goal="creative" aria-label="SSR クリエイティブの扉を確認する">
+            <span class="door-rank">SSR</span><strong class="door-title">クリエイティブの扉</strong><small class="door-jobs">WEB・動画・制作</small>
+          </button>
+          <button class="door-hotspot it" data-goal="it" aria-label="SR IT・デジタルの扉を確認する">
+            <span class="door-rank">SR</span><strong class="door-title">IT・デジタルの扉</strong><small class="door-jobs">インフラ・開発・CAD</small>
+          </button>
+          <button class="door-hotspot craft" data-goal="craft" aria-label="R ものづくりの扉を確認する">
+            <span class="door-rank">R</span><strong class="door-title">ものづくりの扉</strong><small class="door-jobs">施工管理・機械</small>
+          </button>
+          <button class="door-hotspot people" data-goal="people" aria-label="N 人と仕事の扉を確認する">
+            <span class="door-rank">N</span><strong class="door-title">人と仕事の扉</strong><small class="door-jobs">販売・接客・事務</small>
+          </button>
+        </div>
+
+        <aside id="guideDialog" class="guide-dialog" hidden aria-live="polite">
+          <button class="guide-close" data-action="close-guide" aria-label="案内を閉じる">×</button>
+          <div class="guide-bubble">
+            <p id="guideKicker" class="eyebrow">REQUIRED EQUIPMENT</p>
+            <h2 id="guideTitle"></h2>
+            <p id="guideCopy"></p>
+            <ul id="guideEquipment"></ul>
+            <button class="guide-button" data-action="choose-selected-goal">この扉を目指す <span>→</span></button>
+          </div>
+        </aside>
+      </article>
+    </template>
+
+    <template id="questionTemplate">
+      <article class="question-screen">
+        <div class="progress" aria-label="進行状況"><span id="progressFill"></span></div>
+        <p id="questionKicker" class="eyebrow"></p>
+        <h1 id="questionTitle"></h1>
+        <p id="questionHint" class="supporting-copy"></p>
+        <div class="answer-stack">
+          <button class="answer-button" data-answer="yes"></button>
+          <button class="answer-button" data-answer="no"></button>
+          <button class="answer-button subtle-answer" data-answer="maybe"></button>
+        </div>
+        <p class="microcopy">合否を決める質問ではないよ。今の自分に近いものを選ぼう。</p>
+      </article>
+    </template>
+
+    <template id="resultTemplate">
+      <article class="result-screen">
+        <figure class="result-visual">
+          <img id="resultArt" alt="診断されたスタートルート" />
+          <p class="result-scroll-hint">↓ スクロールして、ルートを確認</p>
+        </figure>
+
+        <div class="result-copy">
+          <p class="eyebrow">YOUR STARTING ROUTE</p>
+          <p id="routeChip" class="route-chip"></p>
+          <h1>行きたい未来へ進む、<br />今のスタートルート。</h1>
+          <p id="resultLead" class="result-lead"></p>
+
+          <section class="route-map" aria-label="キャリアルート">
+            <div><span>選んだ未来の扉</span><strong id="goalName"></strong></div>
+            <div><span>今のスタートルート</span><strong id="startingRoute"></strong></div>
+            <div><span>最初に挑む仕事</span><strong id="nextJob"></strong></div>
+          </section>
+
+          <section class="first-quest">
+            <p>FIRST QUEST</p>
+            <strong id="firstQuest"></strong>
+          </section>
+
+          <p class="result-note">今の装備で始められるルートが、次の扉へ進むための経験値になる。</p>
+          <button class="quest-button" data-action="restart">もう一度、ルートを確認する <span>↻</span></button>
+          <p class="creator-credit">@satomi.ohtagaki</p>
+        </div>
+      </article>
+    </template>
+
+    <!-- Career Quest / @satomi.ohtagaki -->
+    <script src="script.js"></script>
+  </body>
+</html>
