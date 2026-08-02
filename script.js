@@ -104,27 +104,27 @@ const freelanceQuestions = [
 ];
 
 const revealCards = [
-  { title: "販売・接客", subtitle: "PEOPLE GATE", crest: "SHOP", rank: "N", goal: "people", tone: "n", art: "retail", delay: 0, tilt: -7,
+  { title: "販売・接客", subtitle: "PEOPLE GATE", crest: "SHOP", rank: "N", goal: "people", tone: "n", art: "retail-tcg", embeddedTitle: true, delay: 0, tilt: -7,
     copy: "お客様の希望を聞き、商品やサービスとの出会いをつくる。", fit: "人の話を聞く・明るく対応する", gear: "あいさつ・商品知識・勤怠", xp: "対人対応・提案力・売場感覚", challenge: "立ち仕事や、忙しい時間帯への対応がある。" },
-  { title: "一般事務", subtitle: "SKILL GATE", crest: "DESK", rank: "SR", goal: "it", tone: "sr", art: "office", delay: 630, tilt: -4,
+  { title: "一般事務", subtitle: "SKILL GATE", crest: "DESK", rank: "SR", goal: "it", tone: "sr", art: "office-tcg", embeddedTitle: true, delay: 630, tilt: -4,
     copy: "書類・データ・連絡を整え、職場を支える。", fit: "丁寧に確認する・支える", gear: "PC操作・正確さ・事務経験・安定した就業歴", xp: "事務処理・調整力・段取り", challenge: "未経験求人は人気が高い。入力ができるだけでは選ばれにくい。" },
-  { title: "営業", subtitle: "R ROUTE", crest: "SALES", rank: "R", goal: "craft", tone: "r", art: "sales", delay: 180, tilt: 7,
+  { title: "営業", subtitle: "R ROUTE", crest: "SALES", rank: "R", goal: "craft", tone: "r", art: "sales-tcg", embeddedTitle: true, delay: 180, tilt: 7,
     copy: "相手の課題を聞き、提案して成果につなげる。", fit: "明るく話せる・断られても動ける・目標から逃げない", gear: "行動量・ヒアリング・振り返り・普通免許（求人による）", xp: "提案力・数字を追う経験・自己管理・成果実績", challenge: "話の上手さより、継続と数字への向き合い方が問われる。" },
-  { title: "施工管理", subtitle: "CRAFT GATE", crest: "BUILD", rank: "R", goal: "craft", tone: "r", art: "construction", delay: 270, tilt: -6,
+  { title: "施工管理", subtitle: "CRAFT GATE", crest: "BUILD", rank: "R", goal: "craft", tone: "r", art: "construction-tcg", embeddedTitle: true, delay: 270, tilt: -6,
     copy: "人・時間・安全を整え、工事を完成へ導く。", fit: "朝の出発・外で働くこと・人と話すことに大きな抵抗がない", gear: "勤怠・報連相・段取り・確認力", xp: "現場理解・調整力・国家資格・高給与を狙える市場価値", challenge: "職人ではなく管理役。会社で休日や教育が大きく変わる。" },
-  { title: "機械エンジニア", subtitle: "CRAFT GATE", crest: "MECH", rank: "R", goal: "craft", tone: "r", art: "mechanical", delay: 360, tilt: 5,
+  { title: "機械エンジニア", subtitle: "CRAFT GATE", crest: "MECH", rank: "R", goal: "craft", tone: "r", art: "mechanical-tcg", embeddedTitle: true, delay: 360, tilt: 5,
     copy: "機械をつくる・動かす・直す。", fit: "ものづくりが好き・もくもく作業に取り組める", gear: "安全意識・工具の扱い・図面の基礎", xp: "技術力・改善力・設備知識", challenge: "組立・点検・保全などは会社で異なる。交替勤務もある。" },
-  { title: "インフラ", subtitle: "DIGITAL GATE", crest: "INFRA", rank: "SR", goal: "it", tone: "sr", art: "infrastructure", delay: 450, tilt: -5,
+  { title: "インフラエンジニア", subtitle: "DIGITAL GATE", crest: "INFRA", rank: "SR", goal: "it", tone: "sr", art: "infrastructure-tcg", embeddedTitle: true, delay: 450, tilt: -5,
     copy: "ネットワークやサーバーを守り、ITを止めない。", fit: "調べる・コツコツ学ぶ", gear: "PC基礎・IT用語・資格学習・正確さ", xp: "IT基礎・障害対応・運用力", challenge: "最初は監視や運用が中心。夜勤・シフト勤務もある。資格や学習実績が必要。" },
-  { title: "CAD", subtitle: "DIGITAL GATE", crest: "CAD", rank: "SR", goal: "it", tone: "sr", art: "cad", delay: 540, tilt: 5,
+  { title: "CADオペレーター", subtitle: "DIGITAL GATE", crest: "CAD", rank: "SR", goal: "it", tone: "sr", art: "cad-tcg", embeddedTitle: true, delay: 540, tilt: 5,
     copy: "設計者の指示を、正確な図面にする。", fit: "細部を見る・正確に作る", gear: "PC操作・CAD学習・正確さ・空間把握", xp: "作図力・設計理解・修正力", challenge: "未経験求人は多くない。操作経験や作品がないと選考で弱い。" },
-  { title: "プログラマー", subtitle: "CREATIVE GATE", crest: "CODE", rank: "SSR", goal: "creative", tone: "ssr", art: "programmer", delay: 720, tilt: -6,
+  { title: "プログラマー", subtitle: "CREATIVE GATE", crest: "CODE", rank: "SSR", goal: "creative", tone: "ssr", art: "programmer-tcg", embeddedTitle: true, delay: 720, tilt: -6,
     copy: "仕組みをコードでつくり、動かす。", fit: "考える・試して直す", gear: "基礎学習・制作物・エラーを調べる力", xp: "開発力・論理思考・改善力", challenge: "未経験枠は狭い。勉強中ではなく、作ったものを見せる必要がある。" },
-  { title: "WEBデザイン", subtitle: "CREATIVE GATE", crest: "WEB", rank: "SSR", goal: "creative", tone: "ssr", art: "web-design", delay: 810, tilt: 6,
+  { title: "WEBデザイン", subtitle: "CREATIVE GATE", crest: "WEB", rank: "SSR", goal: "creative", tone: "ssr", art: "web-design-tcg", embeddedTitle: true, delay: 810, tilt: 6,
     copy: "目的に合わせて、見た目と使いやすさを設計する。", fit: "見せ方を考える・作る", gear: "デザイン基礎・制作ツール・ポートフォリオ", xp: "構成力・表現力・改善力", challenge: "学んだだけでは仕事にならない。作品の質と改善経験が必要。" },
-  { title: "動画編集", subtitle: "CREATIVE GATE", crest: "MOVIE", rank: "SSR", goal: "creative", tone: "ssr", art: "video", delay: 900, tilt: -4,
+  { title: "動画編集", subtitle: "CREATIVE GATE", crest: "MOVIE", rank: "SSR", goal: "creative", tone: "ssr", art: "video-tcg", embeddedTitle: true, delay: 900, tilt: -4,
     copy: "映像を整え、伝わる流れに仕上げる。", fit: "集中して作る・魅せ方を考える", gear: "編集技術・構成力・作品・納期管理", xp: "編集力・演出力・構成力", challenge: "切ってつなぐだけでは単価が上がらない。企画力と実績が必要。" },
-  { title: "フリーランス", subtitle: "WORK STYLE", crest: "SOLO", rank: "SSR", goal: "freelance", tone: "ssr", art: "freelance", delay: 990, tilt: 0,
+  { title: "フリーランス", subtitle: "WORK STYLE", crest: "SOLO", rank: "SSR", goal: "freelance", tone: "ssr", art: "freelance-tcg", embeddedTitle: true, delay: 990, tilt: 0,
     copy: "自分で仕事を取り、納品し、報酬を得る働き方。", fit: "自分で決める・動き続ける", gear: "顧客・実績・営業力・専門スキル・自己管理", xp: "自己管理・提案力・事業感覚", challenge: "顧客探し、納期、収入、休みを自分で管理する。福利厚生も原則、自分で備える。" },
 ];
 
@@ -133,7 +133,7 @@ const goals = {
     rank: "SSR",
     targetLevel: "SSR",
     name: "SSR｜クリエイティブの世界",
-    destinationJobs: "WEBデザイナー・動画クリエイターなど",
+    destinationJobs: "WEBデザイン・動画編集・プログラマー",
     guide: "作品やスキルを見せられる形にして、仕事へつなげる世界。好きという気持ちに、制作実績を足して扉を開こう。",
     requirements: ["作品・ポートフォリオ", "制作ツールの基礎", "学習と制作を続ける時間"],
     entryJob: "営業・施工管理など、対人力と段取りを積める正社員求人",
@@ -151,7 +151,7 @@ const goals = {
     rank: "SR",
     targetLevel: "SR",
     name: "SR｜IT・PCスキルの世界",
-    destinationJobs: "インフラ・CAD・一般事務など",
+    destinationJobs: "インフラエンジニア・CADオペレーター・一般事務",
     guide: "PCの基礎や学習実績を積み重ね、できる仕事を広げていく世界。学んだ証を装備に変えよう。",
     requirements: ["IT・PCの基礎知識", "資格や学習記録", "学び続ける時間"],
     entryJob: "インフラ・CADの学習を続けながら挑める未経験求人",
@@ -160,7 +160,7 @@ const goals = {
     rank: "R",
     targetLevel: "R",
     name: "R｜ものづくりの世界",
-    destinationJobs: "施工管理・機械エンジニアなど",
+    destinationJobs: "営業・施工管理・機械エンジニア",
     guide: "未経験から実戦で学び、段取り・調整力・専門知識を身につける世界。働いた経験がそのまま装備になる。",
     requirements: ["勤怠・継続", "人と連携する力", "段取り・安全への意識"],
     entryJob: "施工管理・機械エンジニアなど、実戦で技術を学べる仕事",
@@ -169,7 +169,7 @@ const goals = {
     rank: "N",
     targetLevel: "N",
     name: "N｜人と仕事の世界",
-    destinationJobs: "販売・接客・事務など",
+    destinationJobs: "販売・接客",
     guide: "社会人としての基本装備を、仕事の中で増やしていく世界。ここで積む経験が次の扉にもつながる。",
     requirements: ["生活リズムと勤怠", "基本的な対人対応", "報告・連絡・相談"],
     entryJob: "販売・接客・事務など、働く経験を積める仕事",
@@ -196,7 +196,7 @@ const results = {
   R: {
     chip: "R｜実戦経験ルート",
     routeName: "Rルート｜働きながら経験値を積む",
-    lead: "資格や作品がまだなくても、未経験から入れる仕事で経験値を集められる。勤怠・報連相・段取りは、次の扉へ進むための強い装備になる。",
+    lead: "Rで選べるのは、営業・施工管理・機械エンジニア。未経験から入れる仕事で経験値を集め、勤怠・報連相・段取りを次の扉へ進む装備に変えよう。",
     quest: "未経験から挑める正社員求人を一つ選び、働きながら目標の装備を育てる",
     art: "assets/r-guide.webp",
     color: "#1f6549",
@@ -312,10 +312,13 @@ function getGateTarget(goal, containerRect) {
 }
 
 function careerCardInner(card) {
+  const titlePlate = card.embeddedTitle
+    ? ""
+    : `<span class="career-card__nameplate" aria-label="${card.subtitle} ${card.title}"><strong>${card.title}</strong></span>`;
   return `
     <span class="career-card__face career-card__face--back"><img src="assets/card-back-${card.tone}.png" alt="" /></span>
     <span class="career-card__face career-card__face--front"><img src="assets/card-front-${card.art}.png" alt="" /></span>
-    <span class="career-card__nameplate"><small>${card.subtitle}</small><strong>${card.title}</strong></span>
+    ${titlePlate}
   `;
 }
 
@@ -484,7 +487,6 @@ function showCardDetail(index) {
   detail.hidden = false;
 
   document.querySelector("#cardDetailVisual").innerHTML = cardMarkup(card);
-  document.querySelector("#cardDetailTitle").textContent = card.title;
   document.querySelector("#cardDetailCopy").textContent = card.copy;
   document.querySelector("#cardDetailGear").textContent = card.gear;
   document.querySelector("#cardDetailChallenge").textContent = card.challenge;
@@ -624,13 +626,14 @@ function routeForAnswers() {
 }
 
 function nextJobFor(route, goal) {
+  if (route === "R") return goals.craft.destinationJobs;
+  if (route === "N_BASE" || route === "N_READY") return goals.people.destinationJobs;
+
   if (goal === goals.freelance) {
-    if (route === "SSR") return "専門性を仕事にし、顧客を増やしていく働き方";
-    return "正社員で実務経験と、顧客に見せられる実績を積める仕事";
+    return route === "SSR" ? "フリーランス" : goals.craft.destinationJobs;
   }
-  if (route === "N_BASE") return "生活と両立しながら、継続経験をつくれる仕事";
-  if (route === "N_READY") return goal.destinationJobs;
-  return goal.entryJob;
+
+  return goal.destinationJobs;
 }
 
 function showResult() {

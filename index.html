@@ -60,7 +60,6 @@
             <button class="card-detail__nav card-detail__nav--prev" type="button" data-action="prev-card" aria-label="前のカードを見る">‹</button>
             <div class="card-detail__content">
               <div id="cardDetailVisual" class="card-detail__visual"></div>
-              <h3 id="cardDetailTitle"></h3>
               <dl class="card-detail__stats">
                 <div><dt>役割</dt><dd id="cardDetailCopy"></dd></div>
                 <div><dt>装備</dt><dd id="cardDetailGear"></dd></div>
@@ -87,16 +86,16 @@
         <div class="door-map">
           <img src="assets/route-doors.webp" alt="四つの未来へつながる魔法の扉" />
           <button class="door-hotspot creative" data-goal="creative" aria-label="SSR クリエイティブの扉を確認する">
-            <span class="door-rank">SSR</span><strong class="door-title">クリエイティブの扉</strong><small class="door-jobs">WEB・動画・制作</small>
+            <span class="door-rank">SSR</span><strong class="door-title">クリエイティブの扉</strong><small class="door-jobs">WEBデザイン・動画編集・プログラマー</small>
           </button>
           <button class="door-hotspot it" data-goal="it" aria-label="SR IT・デジタルの扉を確認する">
-            <span class="door-rank">SR</span><strong class="door-title">IT・デジタルの扉</strong><small class="door-jobs">インフラ・開発・CAD</small>
+            <span class="door-rank">SR</span><strong class="door-title">IT・デジタルの扉</strong><small class="door-jobs">インフラエンジニア・CADオペレーター・一般事務</small>
           </button>
           <button class="door-hotspot craft" data-goal="craft" aria-label="R ものづくりの扉を確認する">
-            <span class="door-rank">R</span><strong class="door-title">ものづくりの扉</strong><small class="door-jobs">施工管理・機械</small>
+            <span class="door-rank">R</span><strong class="door-title">ものづくりの扉</strong><small class="door-jobs">営業・施工管理・機械エンジニア</small>
           </button>
           <button class="door-hotspot people" data-goal="people" aria-label="N 人と仕事の扉を確認する">
-            <span class="door-rank">N</span><strong class="door-title">人と仕事の扉</strong><small class="door-jobs">販売・接客・事務</small>
+            <span class="door-rank">N</span><strong class="door-title">人と仕事の扉</strong><small class="door-jobs">販売・接客</small>
           </button>
         </div>
 
@@ -144,7 +143,7 @@
           <section class="route-map" aria-label="キャリアルート">
             <div><span>選んだ未来の扉</span><strong id="goalName"></strong></div>
             <div><span>今のスタートルート</span><strong id="startingRoute"></strong></div>
-            <div><span>最初に挑む仕事</span><strong id="nextJob"></strong></div>
+            <div><span>このルートで選べるジョブ</span><strong id="nextJob"></strong></div>
           </section>
 
           <section class="first-quest">

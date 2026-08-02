@@ -231,18 +231,18 @@ h1, h2, h3 { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; line-heigh
 }
 .door-jobs {
   bottom: 3.5%;
-  width: auto;
+  width: 90%;
   max-width: 90%;
-  padding: 5px 8px;
+  padding: 4px 6px;
   border: 1px solid rgba(255, 236, 180, 0.55);
   border-radius: 999px;
   color: #fffaf0;
   background: rgba(3, 12, 24, 0.76);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-  font-size: clamp(10px, 2.8vw, 12px);
+  font-size: clamp(9px, 2.55vw, 11px);
   font-weight: 900;
   line-height: 1.25;
-  white-space: nowrap;
+  white-space: normal;
 }
 .door-hotspot:focus-visible,
 .door-hotspot:active {
@@ -847,7 +847,7 @@ h1, h2, h3 { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; line-heigh
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: fill;
 }
 .career-card__face--back { transform: rotateY(0deg); }
 .career-card__face--front { transform: rotateY(180deg); }
@@ -1171,7 +1171,7 @@ h1, h2, h3 { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; line-heigh
 }
 .card-detail__visual {
   display: grid;
-  min-height: 278px;
+  min-height: 304px;
   place-items: center;
   perspective: 900px;
 }
@@ -1179,8 +1179,8 @@ h1, h2, h3 { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; line-heigh
   position: relative;
   left: auto;
   top: auto;
-  width: 178px;
-  height: 258px;
+  width: 198px;
+  height: 288px;
   opacity: 1 !important;
   transform: none !important;
   filter: none !important;
@@ -1266,13 +1266,6 @@ h1, h2, h3 { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; line-heigh
   bottom: 15px;
   left: 13px;
   min-height: 49px;
-}
-.card-detail h3 {
-  margin: 0 0 8px;
-  color: #fff8e9;
-  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
-  font-size: 27px;
-  letter-spacing: -.03em;
 }
 .card-detail__copy {
   margin: 0 auto 14px;
@@ -1374,36 +1367,181 @@ h1, h2, h3 { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; line-heigh
 @media (max-width: 370px) {
   .card-detail { grid-template-columns: 34px minmax(0, 1fr) 34px; padding-inline: 6px; }
   .card-detail__nav { width: 32px; height: 50px; }
-  .card-detail__card { width: 154px; height: 224px; }
+  .card-detail__card { width: 170px; height: 247px; }
   .card-detail__card .career-card__art { height: 117px; margin-top: 39px; }
   .card-detail__card .career-card__figure { font-size: 46px; }
-  .card-detail__visual { min-height: 242px; }
-  .card-detail h3 { font-size: 24px; }
+  .card-detail__visual { min-height: 258px; }
 }
 
-/* Final layer: keep the generated card art uninterrupted and reserve the lower plaque for live text. */
-.career-card__rankplate { z-index: 4; }
-.career-card__seal { z-index: 4; }
+/* The generated lower plaque is the physical card surface. The job title sits inside it, not on a second UI plaque. */
 .career-card__nameplate {
   position: absolute;
   z-index: 4;
-  right: 8px;
-  bottom: 9px;
-  left: 8px;
-  min-height: 33px;
+  top: 72%;
+  right: 6%;
+  bottom: 4%;
+  left: 6%;
+  display: grid;
   margin: 0;
-  padding: 4px 5px 5px;
-  background: linear-gradient(180deg, rgba(6, 13, 22, .56), rgba(5, 12, 20, .86));
-  backdrop-filter: blur(2px);
+  padding: 0 3px;
+  place-items: center;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  pointer-events: none;
 }
-.career-card__nameplate small { font-size: 6px; }
-.career-card strong { font-size: 11px; }
+.career-card__nameplate small { display: none; }
+.career-card strong {
+  color: var(--card-title-ink, #fff1cd);
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: .03em;
+  text-align: center;
+  text-shadow:
+    0 1px 0 var(--card-title-highlight, rgba(255,255,255,.38)),
+    0 -1px 0 var(--card-title-shadow, rgba(10,8,5,.72)),
+    0 2px 2px rgba(0,0,0,.52);
+}
+.career-card--n { --card-title-ink: #f7deb0; --card-title-highlight: rgba(255,255,255,.34); --card-title-shadow: rgba(57,28,8,.92); }
+.career-card--r { --card-title-ink: #f8e8bc; --card-title-highlight: rgba(255,255,255,.36); --card-title-shadow: rgba(8,39,26,.96); }
+.career-card--sr { --card-title-ink: #e7f5ff; --card-title-highlight: rgba(255,255,255,.42); --card-title-shadow: rgba(5,33,67,.94); }
+.career-card--ssr { --card-title-ink: #5d2869; --card-title-highlight: rgba(255,255,255,.76); --card-title-shadow: rgba(255,255,255,.32); }
 .card-detail__card .career-card__nameplate {
-  right: 13px;
-  bottom: 15px;
-  left: 13px;
-  min-height: 49px;
-  padding: 7px 8px 8px;
+  top: 72%;
+  right: 6%;
+  bottom: 4%;
+  left: 6%;
+  padding: 0 5px;
 }
-.card-detail__card .career-card__nameplate small { font-size: 9px; }
-.card-detail__card strong { font-size: 17px; }
+.card-detail__card strong { font-size: 18px; }
+
+/* One premium card chassis per rank. The job art is placed inside this same engraved frame. */
+.career-card--n { --card-shell: url("assets/card-back-n.png"); }
+.career-card--r { --card-shell: url("assets/card-back-r.png"); }
+.career-card--sr { --card-shell: url("assets/card-back-sr.png"); }
+.career-card--ssr { --card-shell: url("assets/card-back-ssr.png"); }
+.career-card.is-revealed {
+  overflow: hidden;
+  border: 0;
+  border-radius: 10px;
+  background: center / 100% 100% no-repeat var(--card-shell);
+  box-shadow: 0 15px 30px rgba(0,0,0,.56), 0 0 24px color-mix(in srgb, var(--card-glow) 24%, transparent);
+}
+.career-card.is-revealed::before,
+.career-card.is-revealed::after { display: none; }
+.career-card.is-revealed .career-card__face--front {
+  inset: 8% 8% 39%;
+  z-index: 1;
+  overflow: hidden;
+  border: 0;
+  border-radius: 5px 5px 2px 2px;
+  background: #08111b;
+}
+.career-card.is-revealed .career-card__face--front img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  transform: scale(1.52);
+  transform-origin: 50% 20%;
+}
+.career-card.is-revealed .career-card__nameplate {
+  top: 65%;
+  right: 11%;
+  bottom: 8%;
+  left: 11%;
+  z-index: 4;
+  min-height: 0;
+  padding: 3px 7px 4px;
+  border: 1px solid color-mix(in srgb, var(--card-glow) 68%, #fff 32%);
+  border-radius: 3px;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--card-deep) 82%, #050b0f 18%), rgba(255,255,255,.08) 50%, color-mix(in srgb, var(--card-deep) 82%, #050b0f 18%)),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, rgba(255,255,255,.15), transparent 30%, rgba(0,0,0,.30));
+  box-shadow:
+    0 0 0 2px rgba(6,11,16,.66),
+    0 0 0 3px color-mix(in srgb, var(--card-glow) 30%, transparent),
+    inset 0 1px rgba(255,255,255,.22),
+    inset 0 -8px 12px rgba(0,0,0,.26);
+}
+.career-card.is-revealed .career-card__nameplate::before,
+.career-card.is-revealed .career-card__nameplate::after {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border: 1px solid color-mix(in srgb, var(--card-glow) 88%, #fff 12%);
+  background: radial-gradient(circle at 35% 30%, #fff9d5 0 7%, var(--card-glow) 18%, var(--card-deep) 66%);
+  box-shadow: 0 0 7px color-mix(in srgb, var(--card-glow) 45%, transparent), inset 0 0 3px rgba(0,0,0,.66);
+  content: "";
+  transform: translateY(-50%) rotate(45deg);
+}
+.career-card.is-revealed .career-card__nameplate::before { left: -7px; }
+.career-card.is-revealed .career-card__nameplate::after { right: -7px; }
+.career-card.is-revealed .career-card__nameplate strong {
+  color: var(--card-title-ink, #fff1cd);
+  font-size: 12px;
+  letter-spacing: .06em;
+  text-shadow:
+    0 1px 0 var(--card-title-highlight, rgba(255,255,255,.35)),
+    0 -1px 0 var(--card-title-shadow, rgba(0,0,0,.75)),
+    0 2px 3px rgba(0,0,0,.7);
+}
+.career-card.is-revealed.career-card--ssr .career-card__nameplate {
+  background:
+    linear-gradient(90deg, #b9b6d0, rgba(255,255,255,.9) 50%, #b9b6d0),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.16) 0 1px, transparent 1px 3px);
+  box-shadow: 0 0 0 2px rgba(65,54,76,.48), 0 0 0 3px rgba(255,255,255,.46), inset 0 1px rgba(255,255,255,.66), inset 0 -8px 12px rgba(103,86,126,.16);
+}
+.card-detail__card.is-revealed .career-card__face--front { inset: 8% 8% 39%; }
+.card-detail__card.is-revealed .career-card__nameplate {
+  top: 65%;
+  right: 11%;
+  bottom: 8%;
+  left: 11%;
+  padding: 6px 8px 7px;
+}
+.card-detail__card.is-revealed .career-card__nameplate strong { font-size: 18px; }
+
+/* Finished TCG fronts stay intact. No simplified HTML frame is placed over their artwork. */
+.career-card.is-revealed {
+  border: 0;
+  background: #07111d;
+  box-shadow: 0 18px 34px rgba(0,0,0,.58), 0 0 28px color-mix(in srgb, var(--card-glow) 30%, transparent);
+}
+.career-card.is-revealed .career-card__face--front,
+.card-detail__card.is-revealed .career-card__face--front {
+  inset: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+}
+.career-card.is-revealed .career-card__face--front img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  object-position: center;
+  transform: none;
+}
+.career-card.is-revealed .career-card__nameplate,
+.card-detail__card.is-revealed .career-card__nameplate {
+  top: 72%;
+  right: 6%;
+  bottom: 4%;
+  left: 6%;
+  padding: 0 3px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.career-card.is-revealed .career-card__nameplate::before,
+.career-card.is-revealed .career-card__nameplate::after { display: none; }
+.career-card.is-revealed .career-card__nameplate strong { font-size: 12px; }
+.card-detail__card.is-revealed .career-card__nameplate { padding: 0 5px; }
+.card-detail__card.is-revealed .career-card__nameplate strong { font-size: 18px; }
