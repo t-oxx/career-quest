@@ -9,6 +9,75 @@ const templates = {
   result: document.querySelector("#resultTemplate"),
 };
 
+let resultQuestCleanup = null;
+let resultQuestRestoreFocus = null;
+
+function clearResultQuestWatch() {
+  if (typeof resultQuestCleanup === "function") resultQuestCleanup();
+  resultQuestCleanup = null;
+}
+
+function closeResultQuestNotice() {
+  const notice = document.querySelector("#resultQuestNotice");
+  if (!notice || notice.hidden) return;
+
+  notice.classList.remove("is-visible");
+  notice.classList.add("is-closing");
+  window.setTimeout(() => {
+    notice.hidden = true;
+    notice.classList.remove("is-closing");
+    if (resultQuestRestoreFocus instanceof HTMLElement) {
+      resultQuestRestoreFocus.focus({ preventScroll: true });
+    }
+    resultQuestRestoreFocus = null;
+  }, 180);
+}
+
+function setupResultQuestWatch() {
+  clearResultQuestWatch();
+
+  const notice = document.querySelector("#resultQuestNotice");
+  if (!notice) return;
+
+  let reachedBottom = false;
+  let shown = false;
+  let timerId = null;
+
+  const showNotice = () => {
+    if (shown || state.view !== "result") return;
+    shown = true;
+    resultQuestRestoreFocus = document.activeElement;
+    notice.hidden = false;
+    requestAnimationFrame(() => {
+      notice.classList.add("is-visible");
+      notice.querySelector(".result-quest-notice__button")?.focus({ preventScroll: true });
+    });
+  };
+
+  const checkBottom = () => {
+    if (reachedBottom || state.view !== "result") return;
+    const scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+    const viewportBottom = scrollTop + window.innerHeight;
+    const pageBottom = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    const bottomThreshold = 56;
+
+    if (viewportBottom >= pageBottom - bottomThreshold) {
+      reachedBottom = true;
+      timerId = window.setTimeout(showNotice, 3000);
+    }
+  };
+
+  window.addEventListener("scroll", checkBottom, { passive: true });
+  window.addEventListener("resize", checkBottom);
+
+  resultQuestCleanup = () => {
+    window.clearTimeout(timerId);
+    window.removeEventListener("scroll", checkBottom);
+    window.removeEventListener("resize", checkBottom);
+    resultQuestRestoreFocus = null;
+  };
+}
+
 const questions = [
   {
     key: "rhythm",
@@ -230,6 +299,14 @@ const state = {
 let revealTimers = [];
 let revealFrame = null;
 let guidePoseIndex = 0;
+let gateTransitioning = false;
+
+const gateTransitionSettings = {
+  creative: { x: "25%", y: "25%", tone: "ssr" },
+  it: { x: "75%", y: "25%", tone: "sr" },
+  craft: { x: "25%", y: "75%", tone: "r" },
+  people: { x: "75%", y: "75%", tone: "n" },
+};
 
 function stopRevealAnimation() {
   if (revealFrame) {
@@ -271,6 +348,7 @@ async function tickleGuide() {
 
 function show(template, view) {
   clearRevealTimers();
+  clearResultQuestWatch();
   state.view = view;
   state.guideOpen = false;
   screen.replaceChildren(template.content.cloneNode(true));
@@ -316,13 +394,36 @@ function careerCardInner(card) {
     ? ""
     : `<span class="career-card__nameplate" aria-label="${card.subtitle} ${card.title}"><strong>${card.title}</strong></span>`;
   return `
-    <span class="career-card__face career-card__face--back"><img src="assets/card-back-${card.tone}.png" alt="" /></span>
-    <span class="career-card__face career-card__face--front"><img src="assets/card-front-${card.art}.png" alt="" /></span>
+    <span class="career-card__face career-card__face--back"><img src="assets/card-back-${card.tone}.webp" alt="" decoding="async" /></span>
+    <span class="career-card__face career-card__face--front"><img src="assets/card-front-${card.art}.webp" alt="" decoding="async" /></span>
     ${titlePlate}
   `;
 }
 
-function runReveal() {
+
+let careerAssetsReady = null;
+
+function preloadCareerAssets() {
+  if (careerAssetsReady) return careerAssetsReady;
+  const sources = [
+    ...new Set([
+      ...revealCards.map((card) => `assets/card-front-${card.art}.webp`),
+      ...revealCards.map((card) => `assets/card-back-${card.tone}.webp`),
+    ]),
+  ];
+  careerAssetsReady = Promise.all(
+    sources.map((source) => new Promise((resolve) => {
+      const image = new Image();
+      image.decoding = "async";
+      image.onload = resolve;
+      image.onerror = resolve;
+      image.src = source;
+    }))
+  );
+  return careerAssetsReady;
+}
+
+async function runReveal() {
   const overlay = document.querySelector("#careerReveal");
   const container = document.querySelector("#revealCards");
   if (!overlay || !container) return;
@@ -330,7 +431,17 @@ function runReveal() {
   overlay.hidden = false;
   setGuideMood("cards");
   overlay.classList.remove("is-sending", "is-leaving");
+  overlay.classList.add("is-loading");
   container.replaceChildren();
+
+  const loading = document.querySelector("#cardLoading");
+  if (loading) loading.hidden = false;
+  container.setAttribute("aria-busy", "true");
+  await preloadCareerAssets();
+  if (!document.body.contains(overlay) || overlay.hidden) return;
+  if (loading) loading.hidden = true;
+  container.removeAttribute("aria-busy");
+  overlay.classList.remove("is-loading");
 
   const items = revealCards.map((card, index) => {
     const element = document.createElement("div");
@@ -403,6 +514,35 @@ function runReveal() {
 
   overlay._careerMotion = motion;
   overlay._careerItems = items;
+
+  const dragGuide = document.querySelector("#dragGuide");
+  const dismissDragGuide = () => {
+    if (!dragGuide || dragGuide.hidden || dragGuide.classList.contains("is-hiding")) return;
+    dragGuide.classList.remove("is-visible");
+    dragGuide.classList.add("is-hiding");
+    const hideTimer = window.setTimeout(() => {
+      if (!document.body.contains(dragGuide)) return;
+      dragGuide.hidden = true;
+      dragGuide.classList.remove("is-hiding");
+    }, 540);
+    revealTimers.push(hideTimer);
+  };
+  overlay._dismissDragGuide = dismissDragGuide;
+
+  if (dragGuide) {
+    const latestCardDelay = Math.max(...revealCards.map((card) => card.delay));
+    const showTimer = window.setTimeout(() => {
+      if (!document.body.contains(dragGuide) || overlay.hidden || motion.sending) return;
+      dragGuide.hidden = false;
+      dragGuide.classList.remove("is-hiding");
+      requestAnimationFrame(() => dragGuide.classList.add("is-visible"));
+
+      // 読み切れるよう、案内は最低3秒以上表示する。
+      const dismissTimer = window.setTimeout(dismissDragGuide, 5600);
+      revealTimers.push(dismissTimer);
+    }, latestCardDelay + 760);
+    revealTimers.push(showTimer);
+  }
 
   const frame = (now) => {
     if (!document.body.contains(overlay)) return;
@@ -515,7 +655,10 @@ function chooseCardGate() {
   overlay.classList.remove("is-detail-open");
   setGuideMood("goal");
   state.goal = card.goal;
-  showGuide(card.goal);
+
+  const doorMap = document.querySelector(".door-map");
+  doorMap?.scrollIntoView({ block: "center", behavior: "smooth" });
+  window.setTimeout(() => showGuide(card.goal), 260);
 }
 
 function sendCardsToDoors() {
@@ -543,6 +686,48 @@ function showGoals(withReveal = false) {
       runReveal();
     });
   }
+}
+
+function playGateTransition(onComplete = null) {
+  if (gateTransitioning) return;
+
+  const doorMap = document.querySelector(".door-map");
+  const goalScreen = document.querySelector(".goal-screen");
+  const complete = typeof onComplete === "function" ? onComplete : () => {};
+
+  if (!doorMap || !goalScreen) {
+    complete();
+    return;
+  }
+
+  gateTransitioning = true;
+  goalScreen.classList.add("is-gate-transitioning");
+  doorMap.classList.add("is-entering-gate");
+
+  const flash = document.createElement("div");
+  flash.className = "gate-transition-flash";
+  flash.setAttribute("aria-hidden", "true");
+  document.body.appendChild(flash);
+
+  window.setTimeout(() => {
+    if (!document.body.contains(flash)) return;
+    flash.classList.add("is-active");
+  }, 430);
+
+  window.setTimeout(() => {
+    complete();
+  }, 790);
+
+  window.setTimeout(() => {
+    flash.classList.add("is-fading");
+  }, 820);
+
+  window.setTimeout(() => {
+    flash.remove();
+    goalScreen.classList.remove("is-gate-transitioning");
+    doorMap.classList.remove("is-entering-gate");
+    gateTransitioning = false;
+  }, 1020);
 }
 
 function showGuide(goalKey) {
@@ -664,6 +849,7 @@ function showResult() {
     scrollHint.hidden = entry.isIntersecting;
   }, { threshold: 0.05 });
   observer.observe(resultCopy);
+  setupResultQuestWatch();
 }
 
 function resultForGoal(route, goal) {
@@ -721,62 +907,10 @@ gameNav.addEventListener("click", (event) => {
 
 const persistentGuide = document.querySelector("#persistentGuide");
 const guideImage = persistentGuide?.querySelector("img");
-const guideTickleSource = "assets/rabbit-tickle.png";
+const guideTickleSource = "assets/rabbit-tickle.webp";
 const guideDefaultSource = "assets/rabbit-guide.webp";
-let guideTickleComposite = "";
-
-function removeBlackBackdrop(source) {
-  return new Promise((resolve) => {
-    const reaction = new Image();
-    reaction.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = reaction.naturalWidth;
-      canvas.height = reaction.naturalHeight;
-      const context = canvas.getContext("2d", { willReadFrequently: true });
-      context.drawImage(reaction, 0, 0);
-      const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
-      const seen = new Uint8Array(canvas.width * canvas.height);
-      const stack = [];
-      const isBackdrop = (point) => {
-        const offset = point * 4;
-        return pixels.data[offset] < 14 && pixels.data[offset + 1] < 14 && pixels.data[offset + 2] < 14;
-      };
-      const add = (point) => {
-        if (!seen[point] && isBackdrop(point)) {
-          seen[point] = 1;
-          stack.push(point);
-        }
-      };
-
-      for (let x = 0; x < canvas.width; x += 1) {
-        add(x);
-        add((canvas.height - 1) * canvas.width + x);
-      }
-      for (let y = 0; y < canvas.height; y += 1) {
-        add(y * canvas.width);
-        add(y * canvas.width + canvas.width - 1);
-      }
-      while (stack.length) {
-        const point = stack.pop();
-        const x = point % canvas.width;
-        const y = Math.floor(point / canvas.width);
-        pixels.data[point * 4 + 3] = 0;
-        if (x > 0) add(point - 1);
-        if (x < canvas.width - 1) add(point + 1);
-        if (y > 0) add(point - canvas.width);
-        if (y < canvas.height - 1) add(point + canvas.width);
-      }
-      context.putImageData(pixels, 0, 0);
-      resolve(canvas.toDataURL("image/png"));
-    };
-    reaction.onerror = () => resolve("");
-    reaction.src = source;
-  });
-}
-
-const guideTickleReady = removeBlackBackdrop(guideTickleSource).then((image) => {
-  guideTickleComposite = image;
-});
+let guideTickleComposite = guideTickleSource;
+const guideTickleReady = Promise.resolve(guideTickleSource);
 persistentGuide?.addEventListener("click", tickleGuide);
 persistentGuide?.querySelector("img")?.addEventListener("animationend", (event) => {
   if (event.animationName === "guide-tickle") {
@@ -797,6 +931,11 @@ screen.addEventListener("click", (event) => {
   const overlay = document.querySelector("#careerReveal");
   if (selectedCard && overlay?._careerMotion && overlay._careerMotion.dragDistance < 8) {
     showCardDetail(Number(selectedCard.dataset.cardIndex));
+    return;
+  }
+
+  if (action === "close-drag-guide") {
+    overlay?._dismissDragGuide?.();
     return;
   }
 
@@ -830,6 +969,11 @@ screen.addEventListener("click", (event) => {
     return;
   }
 
+  if (action === "close-result-quest" || action === "confirm-result-quest") {
+    closeResultQuestNotice();
+    return;
+  }
+
   if (action === "restart") {
     start();
     return;
@@ -841,15 +985,39 @@ screen.addEventListener("click", (event) => {
   }
 
   if (action === "choose-selected-goal") {
-    state.answers = {};
-    state.questionIndex = 0;
-    showQuestion();
+    if (gateTransitioning || !state.goal) return;
+    const dialog = document.querySelector("#guideDialog");
+    if (dialog) dialog.hidden = true;
+    state.guideOpen = false;
+    setGuideMood("goal");
+
+    playGateTransition(() => {
+      state.answers = {};
+      state.questionIndex = 0;
+      showQuestion();
+    });
     return;
   }
 
-  const goal = event.target.closest("[data-goal]")?.dataset.goal;
+  const goalButton = event.target.closest("[data-goal]");
+  const goal = goalButton?.dataset.goal;
   if (goal) {
+    if (gateTransitioning) return;
     state.goal = goal;
+
+    if (goalButton.classList.contains("door-hotspot")) {
+      const dialog = document.querySelector("#guideDialog");
+      if (dialog) dialog.hidden = true;
+      state.guideOpen = false;
+      setGuideMood("goal");
+      playGateTransition(() => {
+        state.answers = {};
+        state.questionIndex = 0;
+        showQuestion();
+      });
+      return;
+    }
+
     showGuide(goal);
     return;
   }
@@ -866,6 +1034,14 @@ start();
 
 
 document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    const resultQuestNotice = document.querySelector("#resultQuestNotice");
+    if (resultQuestNotice && !resultQuestNotice.hidden) {
+      closeResultQuestNotice();
+      return;
+    }
+  }
+
   const overlay = document.querySelector("#careerReveal");
   if (!overlay || overlay.hidden || !overlay._careerMotion) return;
   if (overlay._careerMotion.selectedIndex !== null) {

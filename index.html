@@ -20,16 +20,15 @@
           <button type="button" data-global-action="top" aria-label="トップへ戻る">TOP</button>
         </nav>
       </header>
-
       <section id="screen" class="screen" aria-live="polite"></section>
       <button id="persistentGuide" class="persistent-guide" type="button" aria-label="うさぎの案内人に話しかける">
-        <img src="assets/rabbit-guide.webp" alt="" />
+        <img src="assets/rabbit-guide.webp" alt="" width="240" height="240" decoding="async" />
       </button>
     </main>
 
     <template id="startTemplate">
       <article class="start-screen">
-        <img class="start-art" src="assets/hero.webp" alt="複数の未来の扉を前にした冒険者" />
+        <img class="start-art" src="assets/hero.webp" alt="複数の未来の扉を前にした冒険者" fetchpriority="high" />
         <div class="start-action">
           <p>
             世の中には、まだ知らない仕事がたくさんある。<br />
@@ -39,8 +38,6 @@
           </p>
           <button class="quest-button" data-action="start-quest">キャリアクエストを始める <span>→</span></button>
         </div>
-
-
       </article>
     </template>
 
@@ -51,10 +48,9 @@
           <div class="reveal-copy">
             <p class="eyebrow">THE WORLD OF WORK</p>
             <h2>仕事も、働き方も、ひとつじゃない。</h2>
-            <p>カードをマウスや指で動かして、仕事の世界を眺めてみよう。</p>
           </div>
+          <div id="cardLoading" class="card-loading" role="status">カードを準備中…🃏</div>
           <div id="revealCards" class="reveal-cards" aria-hidden="true"></div>
-
           <aside id="cardDetail" class="card-detail" hidden aria-live="polite">
             <button class="card-detail__close" type="button" data-action="close-card-detail" aria-label="カード詳細を閉じる">×</button>
             <button class="card-detail__nav card-detail__nav--prev" type="button" data-action="prev-card" aria-label="前のカードを見る">‹</button>
@@ -69,9 +65,12 @@
             </div>
             <button class="card-detail__nav card-detail__nav--next" type="button" data-action="next-card" aria-label="次のカードを見る">›</button>
           </aside>
-
+          <aside id="dragGuide" class="reveal-drag-guide" role="status" aria-live="polite" hidden>
+            <span class="reveal-drag-guide__icon" aria-hidden="true">↔</span>
+            <p>気になる一枚をタップして、次のQUESTへ進もう！</p>
+            <button class="reveal-drag-guide__close" type="button" data-action="close-drag-guide" aria-label="案内を閉じる">×</button>
+          </aside>
           <div class="reveal-controls">
-            <p><span>↔</span> ドラッグしてカードを動かせるよ</p>
             <button class="reveal-skip" type="button" data-action="skip-reveal">演出をスキップして、カードを扉へ送る <span>→</span></button>
           </div>
         </section>
@@ -84,17 +83,17 @@
         </div>
 
         <div class="door-map">
-          <img src="assets/route-doors.webp" alt="四つの未来へつながる魔法の扉" />
-          <button class="door-hotspot creative" data-goal="creative" aria-label="SSR クリエイティブの扉を確認する">
+          <img src="assets/route-doors.webp" alt="四つの未来へつながる魔法の扉" loading="lazy" decoding="async" />
+          <button class="door-hotspot creative" data-goal="creative" aria-label="SSRの扉を確認する">
             <span class="door-rank">SSR</span><strong class="door-title">クリエイティブの扉</strong><small class="door-jobs">WEBデザイン・動画編集・プログラマー</small>
           </button>
-          <button class="door-hotspot it" data-goal="it" aria-label="SR IT・デジタルの扉を確認する">
+          <button class="door-hotspot it" data-goal="it" aria-label="SRの扉を確認する">
             <span class="door-rank">SR</span><strong class="door-title">IT・デジタルの扉</strong><small class="door-jobs">インフラエンジニア・CADオペレーター・一般事務</small>
           </button>
-          <button class="door-hotspot craft" data-goal="craft" aria-label="R ものづくりの扉を確認する">
+          <button class="door-hotspot craft" data-goal="craft" aria-label="Rの扉を確認する">
             <span class="door-rank">R</span><strong class="door-title">ものづくりの扉</strong><small class="door-jobs">営業・施工管理・機械エンジニア</small>
           </button>
-          <button class="door-hotspot people" data-goal="people" aria-label="N 人と仕事の扉を確認する">
+          <button class="door-hotspot people" data-goal="people" aria-label="Nの扉を確認する">
             <span class="door-rank">N</span><strong class="door-title">人と仕事の扉</strong><small class="door-jobs">販売・接客</small>
           </button>
         </div>
@@ -130,35 +129,50 @@
     <template id="resultTemplate">
       <article class="result-screen">
         <figure class="result-visual">
-          <img id="resultArt" alt="診断されたスタートルート" />
+          <img id="resultArt" alt="診断されたスタートルート" loading="lazy" decoding="async" />
           <p class="result-scroll-hint">↓ スクロールして、ルートを確認</p>
         </figure>
-
         <div class="result-copy">
           <p class="eyebrow">YOUR STARTING ROUTE</p>
           <p id="routeChip" class="route-chip"></p>
           <h1>行きたい未来へ進む、<br />今のスタートルート。</h1>
           <p id="resultLead" class="result-lead"></p>
-
           <section class="route-map" aria-label="キャリアルート">
             <div><span>選んだ未来の扉</span><strong id="goalName"></strong></div>
             <div><span>今のスタートルート</span><strong id="startingRoute"></strong></div>
             <div><span>このルートで選べるジョブ</span><strong id="nextJob"></strong></div>
           </section>
-
           <section class="first-quest">
             <p>FIRST QUEST</p>
             <strong id="firstQuest"></strong>
           </section>
-
           <p class="result-note">今の装備で始められるルートが、次の扉へ進むための経験値になる。</p>
           <button class="quest-button" data-action="restart">もう一度、ルートを確認する <span>↻</span></button>
           <p class="creator-credit">@satomi.ohtagaki</p>
         </div>
+
+        <aside id="resultQuestNotice" class="result-quest-notice" role="dialog" aria-modal="true" aria-labelledby="resultQuestTitle" hidden>
+          <div class="result-quest-notice__panel">
+            <div class="result-quest-notice__ornaments" aria-hidden="true">
+              <span class="result-quest-notice__corner result-quest-notice__corner--tl"></span>
+              <span class="result-quest-notice__corner result-quest-notice__corner--tr"></span>
+              <span class="result-quest-notice__corner result-quest-notice__corner--bl"></span>
+              <span class="result-quest-notice__corner result-quest-notice__corner--br"></span>
+              <span class="result-quest-notice__crest result-quest-notice__crest--top"></span>
+              <span class="result-quest-notice__crest result-quest-notice__crest--bottom"></span>
+            </div>
+            <button class="result-quest-notice__close" type="button" data-action="close-result-quest" aria-label="クエスト案内を閉じる">×</button>
+            <span class="result-quest-notice__spark" aria-hidden="true">✦</span>
+            <p id="resultQuestTitle" class="result-quest-notice__title">QUEST発生！</p>
+            <p class="result-quest-notice__copy">次に進むルートを<br />担当者と一緒に考えよう！</p>
+            <button class="result-quest-notice__button" type="button" data-action="confirm-result-quest">
+              担当者と進み方を確認する <span>›</span>
+            </button>
+          </div>
+        </aside>
       </article>
     </template>
 
-    <!-- Career Quest / @satomi.ohtagaki -->
     <script src="script.js"></script>
   </body>
 </html>
