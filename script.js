@@ -1050,3 +1050,53 @@ document.addEventListener("keydown", (event) => {
     if (event.key === "ArrowRight") moveCardDetail(1);
   }
 });
+
+
+/* ===== SIMPLE ACCESS GATE ===== */
+function normalizePassphrase(value) {
+  return String(value || "")
+    .trim()
+    .replace(/[\s　]/g, "")
+    .replace(/ヒラケゴマ/g, "ひらけごま");
+}
+
+function unlockCareerQuest() {
+  const gate = document.querySelector("#accessGate");
+  document.body.classList.remove("is-locked");
+  if (gate) gate.hidden = true;
+}
+
+function setupAccessGate() {
+  const gate = document.querySelector("#accessGate");
+  const form = document.querySelector("#accessGateForm");
+  const input = document.querySelector("#accessPassphrase");
+  const error = document.querySelector("#accessGateError");
+  if (!gate || !form || !input || !error) return;
+
+  // 旧仕様で保存された認証情報は削除し、ページを開くたびに合言葉を求める。
+  try {
+    localStorage.removeItem("careerQuestAccessUntil");
+  } catch (error) {
+    // localStorage が使えない環境でも、合言葉入力はそのまま利用できる。
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (normalizePassphrase(input.value) === "ひらけごま") {
+      error.hidden = true;
+      const button = form.querySelector('button[type="submit"]');
+      if (button) button.disabled = true;
+      gate.classList.add("is-unlocking");
+      window.setTimeout(unlockCareerQuest, 720);
+      return;
+    }
+
+    error.hidden = false;
+    form.classList.remove("is-shaking");
+    void form.offsetWidth;
+    form.classList.add("is-shaking");
+    input.select();
+  });
+}
+
+setupAccessGate();
