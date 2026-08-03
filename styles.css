@@ -2377,10 +2377,14 @@ h1, h2, h3 { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; line-heigh
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .door-map.is-entering-gate,
-  .gate-transition-flash {
+  .door-map.is-entering-gate {
     animation: none !important;
-    transition-duration: .01ms !important;
+  }
+  .gate-transition-flash {
+    transition: opacity 300ms ease-in !important;
+  }
+  .gate-transition-flash.is-fading {
+    transition-duration: 180ms !important;
   }
 }
 
